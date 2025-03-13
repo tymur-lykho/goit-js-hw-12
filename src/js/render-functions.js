@@ -50,7 +50,8 @@ export default function renderContent(data) {
     )
     .join('');
 
-  gallery.innerHTML = markup;
+  // gallery.innerHTML = markup;
+  gallery.insertAdjacentHTML('beforeend', markup);
   initLightBox();
 }
 

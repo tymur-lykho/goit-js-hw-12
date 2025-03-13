@@ -6,43 +6,84 @@ import renderContent from './js/render-functions';
 
 const form = document.querySelector('.form');
 const loader = document.querySelector('.loader');
-
 const gallery = document.querySelector('.gallery');
+const loadBtn = document.querySelector('.load-more-btn');
+
+let limit = 15;
+let page = 1;
+let lastQuery;
+let totalCountOfResult;
 
 loader.classList.add('hidden');
+loadBtn.classList.add('hidden');
 
 iziToast.settings({
   position: 'topRight',
 });
 
-form.addEventListener('submit', event => {
+form.addEventListener('submit', async event => {
   event.preventDefault();
-  const query = form.querySelector('.form-input').value;
+  gallery.innerHTML = '';
 
-  if (query.trim() === '') {
+  const query = form.querySelector('.form-input').value.trim();
+
+  if (query === '') {
     iziToast.error({
       message: 'Query is not valid!',
     });
     return;
   }
 
-  gallery.innerHTML = '';
-  loader.classList.remove('hidden');
-  console.log(loader.classList);
+  if (query !== lastQuery) {
+    lastQuery = query;
+    page = 1;
+  }
 
-  getPhotos(query)
-    .then(data => {
-      if (data) {
-        renderContent(data);
-      }
-    })
-    .catch(e => {
-      iziToast.error({
-        message: e.message,
-      });
-    })
-    .finally(() => {
-      loader.classList.add('hidden');
-      form.reset();
+  loader.classList.remove('hidden');
+
+  try {
+    const data = await getPhotos(query, limit, page);
+    totalCountOfResult = data.totalHits;
+    if (data) {
+      renderContent(data.hits);
+    }
+  } catch (error) {
+    iziToast.error({
+      message: error.message,
     });
+  }
+
+  loader.classList.add('hidden');
+  loadBtn.classList.remove('hidden');
+  form.reset();
+});
+
+loadBtn.addEventListener('click', async () => {
+  try {
+    const data = await getPhotos(lastQuery, limit, page);
+    if (data) {
+      renderContent(data.hits);
+    }
+
+    page += 1;
+
+    loadBtn.classList.add('hidden');
+    loader.classList.remove('hidden');
+
+    if (page > Math.ceil(totalCountOfResult / limit)) {
+      loadBtn.classList.add('hidden');
+      loader.classList.add('hidden');
+
+      return iziToast.error({
+        message: "We're sorry, there are no more posts to load",
+      });
+    }
+  } catch (error) {
+    iziToast.error({
+      message: error.message,
+    });
+  }
+
+  loader.classList.add('hidden');
+  loadBtn.classList.remove('hidden');
 });

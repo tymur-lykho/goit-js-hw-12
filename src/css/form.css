@@ -31,10 +31,10 @@
     outline-color: #4e75ff;
   }
 }
-.form-btn {
+.btn {
   border-radius: 8px;
   padding: 8px 16px;
-  width: 91px;
+  width: fit-content;
   background-color: #4e75ff;
 
   border: none;
@@ -49,4 +49,8 @@
   &:hover {
     background-color: #6c8cff;
   }
+}
+
+.load-more-btn {
+  margin: 16px auto;
 }
