@@ -1,7 +1,5 @@
 import axios from 'axios';
 
-import moduleName from './render-functions';
-
 const API_KEY = '13611713-3ff341a8136eabd4453734908';
 
 axios.defaults.baseURL = 'https://pixabay.com/api/';

@@ -14,7 +14,6 @@ let page = 1;
 let lastQuery;
 let totalCountOfResult;
 
-loader.classList.add('hidden');
 loadBtn.classList.add('hidden');
 
 iziToast.settings({
@@ -39,7 +38,7 @@ form.addEventListener('submit', async event => {
     page = 1;
   }
 
-  loader.classList.remove('hidden');
+  loader.classList.add('start');
 
   try {
     const data = await getPhotos(query, limit, page);
@@ -53,12 +52,14 @@ form.addEventListener('submit', async event => {
     });
   }
 
-  loader.classList.add('hidden');
+  loader.classList.remove('start');
   loadBtn.classList.remove('hidden');
   form.reset();
 });
 
 loadBtn.addEventListener('click', async () => {
+  loadBtn.classList.add('hidden');
+  loader.classList.add('start');
   try {
     const data = await getPhotos(lastQuery, limit, page);
     if (data) {
@@ -68,12 +69,9 @@ loadBtn.addEventListener('click', async () => {
 
     page += 1;
 
-    loadBtn.classList.add('hidden');
-    loader.classList.remove('hidden');
-
     if (page > Math.ceil(totalCountOfResult / limit)) {
       loadBtn.classList.add('hidden');
-      loader.classList.add('hidden');
+      loader.classList.remove('start');
 
       return iziToast.error({
         message: "We're sorry, there are no more posts to load",
@@ -85,7 +83,7 @@ loadBtn.addEventListener('click', async () => {
     });
   }
 
-  loader.classList.add('hidden');
+  loader.classList.remove('start');
   loadBtn.classList.remove('hidden');
 });
 

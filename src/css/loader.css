@@ -1,16 +1,19 @@
 .loader {
-  width: 16px;
-  height: 16px;
-  box-shadow: 0 30px, 0 -30px;
-  border-radius: 4px;
-  background: currentColor;
-  display: block;
-  margin: 0 auto 0;
-  position: relative;
-  color: rgb(29, 29, 29);
-  transform: translateY(30px);
-  box-sizing: border-box;
-  animation: animloader 2s ease infinite;
+  display: none;
+  &.start {
+    width: 16px;
+    height: 16px;
+    box-shadow: 0 30px, 0 -30px;
+    border-radius: 4px;
+    background: currentColor;
+    display: block;
+    margin: 0 auto 0;
+    position: relative;
+    color: rgb(29, 29, 29);
+    transform: translateY(30px);
+    box-sizing: border-box;
+    animation: animloader 2s ease infinite;
+  }
 }
 .loader::after,
 .loader::before {
