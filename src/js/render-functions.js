@@ -3,7 +3,17 @@ import 'simplelightbox/dist/simple-lightbox.min.css';
 
 const gallery = document.querySelector('.gallery');
 
-export default function renderContent(data) {
+let galleryBox = new SimpleLightbox('.gallery a', {
+  captionsData: 'alt',
+  captionPosition: 'bottom',
+  captionDelay: 250,
+});
+
+galleryBox.on('error.simplelightbox', function (e) {
+  console.log(e);
+});
+
+export function renderContent(data) {
   const markup = data
     .map(
       ({
@@ -50,21 +60,7 @@ export default function renderContent(data) {
     )
     .join('');
 
-  // gallery.innerHTML = markup;
   gallery.insertAdjacentHTML('beforeend', markup);
-  initLightBox();
-}
-
-function initLightBox() {
-  let galleryBox = new SimpleLightbox('.gallery a', {
-    captionsData: 'alt',
-    captionPosition: 'bottom',
-    captionDelay: 250,
-  });
 
   galleryBox.refresh();
-
-  galleryBox.on('error.simplelightbox', function (e) {
-    console.log(e);
-  });
 }

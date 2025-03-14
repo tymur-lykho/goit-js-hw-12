@@ -2,7 +2,7 @@ import iziToast from 'izitoast';
 import 'izitoast/dist/css/iziToast.min.css';
 
 import getPhotos from './js/pixabay-api';
-import renderContent from './js/render-functions';
+import { renderContent } from './js/render-functions';
 
 const form = document.querySelector('.form');
 const loader = document.querySelector('.loader');
@@ -46,6 +46,11 @@ form.addEventListener('submit', async event => {
     if (data) {
       renderContent(data.hits);
     }
+    if (data.hits.length < limit) {
+      loadBtn.classList.add('hidden');
+    } else {
+      loadBtn.classList.remove('hidden');
+    }
   } catch (error) {
     iziToast.error({
       message: error.message,
@@ -53,13 +58,16 @@ form.addEventListener('submit', async event => {
   }
 
   loader.classList.remove('start');
-  loadBtn.classList.remove('hidden');
+
   form.reset();
 });
 
 loadBtn.addEventListener('click', async () => {
   loadBtn.classList.add('hidden');
   loader.classList.add('start');
+
+  page += 1;
+
   try {
     const data = await getPhotos(lastQuery, limit, page);
     if (data) {
@@ -67,10 +75,13 @@ loadBtn.addEventListener('click', async () => {
       scrollDown('.img-card', 3);
     }
 
-    page += 1;
+    if (data.hits.length < limit) {
+      loadBtn.classList.add('hidden');
+    } else {
+      loadBtn.classList.remove('hidden');
+    }
 
     if (page > Math.ceil(totalCountOfResult / limit)) {
-      loadBtn.classList.add('hidden');
       loader.classList.remove('start');
 
       return iziToast.error({
@@ -84,7 +95,6 @@ loadBtn.addEventListener('click', async () => {
   }
 
   loader.classList.remove('start');
-  loadBtn.classList.remove('hidden');
 });
 
 function scrollDown(itemSelector, countOfItem) {
