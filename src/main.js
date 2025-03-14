@@ -63,6 +63,7 @@ loadBtn.addEventListener('click', async () => {
     const data = await getPhotos(lastQuery, limit, page);
     if (data) {
       renderContent(data.hits);
+      scrollDown('.img-card', 3);
     }
 
     page += 1;
@@ -87,3 +88,12 @@ loadBtn.addEventListener('click', async () => {
   loader.classList.add('hidden');
   loadBtn.classList.remove('hidden');
 });
+
+function scrollDown(itemSelector, countOfItem) {
+  const item = document.querySelector(itemSelector);
+  const itemHeight = item.getBoundingClientRect().height;
+  window.scrollBy({
+    top: itemHeight * countOfItem,
+    behavior: 'smooth',
+  });
+}
